@@ -32,6 +32,7 @@
         android:layout_below="@+id/infoString"
         android:layout_above="@+id/newToDo">
 
+
     </ListView>
 
     <EditText
@@ -47,6 +48,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/newToDoBT"
         android:layout_alignBottom="@+id/newToDo"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
