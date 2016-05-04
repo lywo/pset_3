@@ -1,5 +1,6 @@
 package com.example.lydia.lydiawolfs_pset3;
 
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,8 +15,12 @@ import org.w3c.dom.Text;
 public class DBhelper extends SQLiteOpenHelper {
 
 
-    private static final String DATABASE_NAME = "first.db";
+    private static final String DATABASE_NAME = "todo.db";
     private static final int DATABASE_VERSION = 1;
+    private static final String TODO_LIST = "todolist";
+
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_ITEM = "item";
 
     public DBhelper(Context context){ // DIT IS DE CONSTRUCTOR
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -23,55 +28,106 @@ public class DBhelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db = getWritableDatabase();
-        String query = "CREATE TABLE toDoItems(_id INTEGER PRIMARY KEY AUTOINCREMENT", item Text)
-        db.execSQL(query); // executing!
+        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TODO_LIST + "(" + COLUMN_ID +
+                " INTEGER PRIMARY KEY," + COLUMN_ITEM + " TEXT,"+ ")";
+        db.execSQL(CREATE_PRODUCTS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db = getWritableDatabase();
-        String query = "CREATE TABLE toDoItems(_id INTEGER PRIMARY KEY AUTOINCREMENT", item Text)
-        db.execSQL(query);
-    }
+        // oude database verwijderen
 
-    public void onUpdate(SQLiteDatabase db){
+        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TODO_LIST + "(" + COLUMN_ID +
+                " INTEGER PRIMARY KEY," + COLUMN_ITEM + " TEXT,"+ ")";
+        db.execSQL(CREATE_PRODUCTS_TABLE);
 
     }
 
     // CRUD method adding new info
-//    SQLiteDatabase db = getWritableDatabase();
-//
-//    ContentValues values = new ContentValues();
-    values.put();
+    public void addItem(String listItem) {
 
-    db.insert(c);
-    db.close();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM, listItem);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TODO_LIST, null, values);
+        db.close();
+    }
 
 
-    // CRUD method read
-//    SQLiteDatabase db = getWritableDatabase();
-    query = "SELECT _id, item FROM toDoItems";
-    Cursor cursor = db.rawQuery(query, null);
-    //DO whatever you want with the information
-    cursor.close();
-    db.close();
+    // CRUD method read info
+    public ToDo readItem(String item) {
+        String query = "Select * FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + "\"";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        ToDo listItem = new ToDo();
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            listItem.setID(Integer.parseInt(cursor.getString(0)));
+            listItem.setItem(cursor.getString(1));
+            cursor.close();
+        } else {
+            listItem = null;
+        }
+        db.close();
+        return listItem;
+    }
 
     // CRUD method edit
-    int Id= 3
-    SQLiteDatabase db = getWritableDatabase();
+    public ToDo editItem(ToDo listItem) {
+        String query = "Select * FROM " + TODO_LIST + " WHERE " + COLUMN_ID + " = " + listItem.getID() + "\"";
 
-    ContentValues values = newContentValues();
-    values.put(item, );
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM, listItem.getItem());
 
-    db.update(toDoItems, values, _id=?,  new String[] {String.valueOf(id)});
-    db.close();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TODO_LIST, null, values);
+        db.close();
+
+        return listItem;
+    }
 
     // CRUD method delete
-    int id =3;
-    SQLiteDatabase db = getWritableDatabase();
+    public boolean deleteItem(String item) {
 
-    db.delete(, _id = ?, new String[] {String.ValueOf(id)});
+        boolean result = false;
 
-    db.close();
+        String query = "Select * FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + "\"";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        ToDo listItem = new ToDo();
+
+        if (cursor.moveToFirst()) {
+            listItem.setID(Integer.parseInt(cursor.getString(0)));
+            db.delete(TODO_LIST, COLUMN_ID + " = ?",
+                    new String[] { String.valueOf(listItem.getID()) });
+            cursor.close();
+            result = true;
+        }
+        db.close();
+        return result;
+    }
+
+    /*
+    Loading complete database
+     */
+    public void readList(){
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "Select _id, item FROM " + TODO_LIST+ "\"";
+        Cursor cursor = db.rawQuery( query, null );
+
+        // Do whatever you want with the information
+
+        cursor.close();
+        db.close();
+    }
 }
