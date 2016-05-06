@@ -4,10 +4,18 @@ import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.json.JSONException;
 import org.w3c.dom.Text;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Lydia on 29-4-2016.
@@ -120,14 +128,47 @@ public class DBhelper extends SQLiteOpenHelper {
     /*
     Loading complete database
      */
-    public void readList(){
+    public String [] readList() {
+//            throws SQLException, JSONException, ClassNotFoundException, java.sql.SQLException
+
         SQLiteDatabase db = getReadableDatabase();
         String query = "Select _id, item FROM " + TODO_LIST+ "\"";
         Cursor cursor = db.rawQuery( query, null );
 
-        // Do whatever you want with the information
+        List<String> listItems = new ArrayList<String>();
+
+//        PreparedStatement ps = null;
+//        ResultSet rs = ps.executeQuery();
+//
+//        while(rs.next()) {
+//            int id = rs.getString(1);
+//            String pass = rs.getString(2);
+//            listItems.add(id, pass);
+//        }
+
+//        Connection con = ...;
+//        try {
+//            ps = con.prepareStatement(query);
+//        } catch (java.sql.SQLException e) {
+//            e.printStackTrace();
+//        }
+
+        String listItem = "";
+        if (cursor .moveToFirst()) {
+            while (cursor.isAfterLast() == false) {
+                listItem = cursor.getString(cursor.getColumnIndex(listItem));
+
+                listItems.add(listItem);
+                cursor.moveToNext();
+            }
+        }
 
         cursor.close();
         db.close();
+
+        String [] ToDoItems = listItems.toArray(new String[listItems.size()]);
+
+        return ToDoItems;
+
+        }
     }
-}

@@ -35,6 +35,8 @@ public class MyAdapter extends ArrayAdapter<String>{
 
         CheckBox theCB = (CheckBox) txtToDoItem.findViewById(R.id.cb);
 
+        // theCB.setChecked(savedInstanceState.getBoolean("cb"));
+
         return theView;
     }
 }
