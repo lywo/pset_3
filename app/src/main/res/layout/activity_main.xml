@@ -28,7 +28,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
+        android:id="@+id/myList"
         android:layout_below="@+id/infoString"
         android:layout_above="@+id/newToDo">
 
