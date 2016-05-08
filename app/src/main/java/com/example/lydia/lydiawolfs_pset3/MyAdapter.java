@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.example.lydia.lydiawolfs_pset3.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Lydia on 29-4-2016.
  */
@@ -17,8 +20,8 @@ import com.example.lydia.lydiawolfs_pset3.R;
 public class MyAdapter extends ArrayAdapter<String>{
 
 
-    public MyAdapter(Context context, String [] values) {
-        super(context, R.layout.row_layout_2, values);
+    public MyAdapter(Context context, ArrayList<String> values) {
+        super(context, 0, values);
     }
 
     @Override
@@ -26,17 +29,9 @@ public class MyAdapter extends ArrayAdapter<String>{
         LayoutInflater toDoInflater = LayoutInflater.from(getContext());
 
         View theView = toDoInflater.inflate(R.layout.row_layout_2, parent, false);
-
         String toDoItem = getItem(position);
-
-        TextView txtToDoItem = (TextView) theView.findViewById(R.id.txtNewToDo);
-
+        TextView txtToDoItem = (TextView) theView.findViewById(R.id.txtToDo);
         txtToDoItem.setText(toDoItem);
-
-        CheckBox theCB = (CheckBox) txtToDoItem.findViewById(R.id.cb);
-
-        // theCB.setChecked(savedInstanceState.getBoolean("cb"));
-
         return theView;
     }
 }

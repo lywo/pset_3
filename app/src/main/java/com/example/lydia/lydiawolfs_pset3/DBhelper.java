@@ -81,6 +81,7 @@ public class DBhelper extends SQLiteOpenHelper {
     // CRUD method edit
     public ToDo editItem(ToDo listItem) {
         String query = "SELECT * FROM " + TODO_LIST + " WHERE " + COLUMN_ID + " = " + listItem.getID() + "\"" + ")";
+
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM, listItem.getItem());
         SQLiteDatabase db = this.getWritableDatabase();

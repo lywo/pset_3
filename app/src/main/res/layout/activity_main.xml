@@ -15,7 +15,7 @@
         android:id="@+id/toDoList"
         android:text="TO-DO list app!"
         android:layout_centerHorizontal="true"
-        android:textSize="50dp"/>
+        android:textSize="45dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,19 +27,17 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/myList"
         android:layout_below="@+id/infoString"
-        android:layout_above="@+id/newToDo">
-
-
+        android:layout_above="@+id/etxtNewToDo">
     </ListView>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/newToDo"
-        android:hint="new TO DO item"
+        android:id="@+id/etxtNewToDo"
+        android:hint="New TO DO item"
         android:textSize="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -49,13 +47,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/newToDoBT"
-        android:layout_alignBottom="@+id/newToDo"
+        android:layout_alignBottom="@+id/etxtNewToDo"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Add"
         android:textSize="15dp"
-        android:onClick="addNewItem"/>
-
-
+        android:onClick="addNewItem" />
 
 </RelativeLayout>
