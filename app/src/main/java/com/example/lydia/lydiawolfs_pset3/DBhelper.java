@@ -22,11 +22,9 @@ import java.util.List;
  */
 public class DBhelper extends SQLiteOpenHelper {
 
-
     private static final String DATABASE_NAME = "todo.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TODO_LIST = "todolist";
-
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_ITEM = "item";
 
@@ -37,7 +35,7 @@ public class DBhelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TODO_LIST + "(" + COLUMN_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_ITEM + " TEXT,"+ ")";
+                " INTEGER PRIMARY KEY," + COLUMN_ITEM + " TEXT"+ ")";
         db.execSQL(CREATE_PRODUCTS_TABLE);
     }
 
@@ -53,12 +51,9 @@ public class DBhelper extends SQLiteOpenHelper {
 
     // CRUD method adding new info
     public void addItem(String listItem) {
-
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM, listItem);
-
         SQLiteDatabase db = this.getWritableDatabase();
-
         db.insert(TODO_LIST, null, values);
         db.close();
     }
@@ -66,12 +61,9 @@ public class DBhelper extends SQLiteOpenHelper {
 
     // CRUD method read info
     public ToDo readItem(String item) {
-        String query = "Select * FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + "\"";
-
+        String query = "SELECT * FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + ")";
         SQLiteDatabase db = this.getWritableDatabase();
-
         Cursor cursor = db.rawQuery(query, null);
-
         ToDo listItem = new ToDo();
 
         if (cursor.moveToFirst()) {
@@ -88,11 +80,9 @@ public class DBhelper extends SQLiteOpenHelper {
 
     // CRUD method edit
     public ToDo editItem(ToDo listItem) {
-        String query = "Select * FROM " + TODO_LIST + " WHERE " + COLUMN_ID + " = " + listItem.getID() + "\"";
-
+        String query = "SELECT * FROM " + TODO_LIST + " WHERE " + COLUMN_ID + " = " + listItem.getID() + "\"" + ")";
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM, listItem.getItem());
-
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TODO_LIST, null, values);
@@ -102,73 +92,39 @@ public class DBhelper extends SQLiteOpenHelper {
     }
 
     // CRUD method delete
-    public boolean deleteItem(String item) {
-
-        boolean result = false;
-
-        String query = "Select * FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + "\"";
-
+    // TODO delete items by id not String item value
+    public void deleteItem(String item) {
+        String query = "DELETE FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        ToDo listItem = new ToDo();
-
-        if (cursor.moveToFirst()) {
-            listItem.setID(Integer.parseInt(cursor.getString(0)));
-            db.delete(TODO_LIST, COLUMN_ID + " = ?",
-                    new String[] { String.valueOf(listItem.getID()) });
-            cursor.close();
-            result = true;
-        }
+        db.execSQL(query);
         db.close();
-        return result;
     }
 
     /*
     Loading complete database
      */
-    public String [] readList() {
-//            throws SQLException, JSONException, ClassNotFoundException, java.sql.SQLException
-
+    public ArrayList<String>readList() {
         SQLiteDatabase db = getReadableDatabase();
-        String query = "Select _id, item FROM " + TODO_LIST+ "\"";
+        String query = "SELECT _id, item FROM " + TODO_LIST;
         Cursor cursor = db.rawQuery( query, null );
-
-        List<String> listItems = new ArrayList<String>();
-
-//        PreparedStatement ps = null;
-//        ResultSet rs = ps.executeQuery();
-//
-//        while(rs.next()) {
-//            int id = rs.getString(1);
-//            String pass = rs.getString(2);
-//            listItems.add(id, pass);
-//        }
-
-//        Connection con = ...;
-//        try {
-//            ps = con.prepareStatement(query);
-//        } catch (java.sql.SQLException e) {
-//            e.printStackTrace();
-//        }
+        ArrayList<String> ToDoItems = new ArrayList<String>();
 
         String listItem = "";
-        if (cursor .moveToFirst()) {
+        if (cursor.moveToFirst()) {
             while (cursor.isAfterLast() == false) {
-                listItem = cursor.getString(cursor.getColumnIndex(listItem));
-
-                listItems.add(listItem);
+                listItem = cursor.getString(cursor.getColumnIndex(COLUMN_ITEM));
+                ToDoItems.add(listItem);
                 cursor.moveToNext();
             }
         }
-
         cursor.close();
         db.close();
-
-        String [] ToDoItems = listItems.toArray(new String[listItems.size()]);
-
         return ToDoItems;
+        }
 
+        public void DeleteAll(){
+            SQLiteDatabase db = getWritableDatabase();
+            String query = "DELETE FROM " + TODO_LIST;
+            db.execSQL(query);
         }
     }
