@@ -1,24 +1,15 @@
 package com.example.lydia.lydiawolfs_pset3;
 
-import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import org.json.JSONException;
-import org.w3c.dom.Text;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Lydia on 29-4-2016.
+ * DB helper that manages the todoList database.
  */
 public class DBhelper extends SQLiteOpenHelper {
 
@@ -37,19 +28,22 @@ public class DBhelper extends SQLiteOpenHelper {
         String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TODO_LIST + "(" + COLUMN_ID +
                 " INTEGER PRIMARY KEY," + COLUMN_ITEM + " TEXT"+ ")";
         db.execSQL(CREATE_PRODUCTS_TABLE);
+
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // oude database verwijderen
-
         String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TODO_LIST + "(" + COLUMN_ID +
                 " INTEGER PRIMARY KEY," + COLUMN_ITEM + " TEXT,"+ ")";
         db.execSQL(CREATE_PRODUCTS_TABLE);
 
     }
 
-    // CRUD method adding new info
+    /*
+    CRUD method
+    Add one item.
+    */
     public void addItem(String listItem) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM, listItem);
@@ -58,41 +52,10 @@ public class DBhelper extends SQLiteOpenHelper {
         db.close();
     }
 
-
-    // CRUD method read info
-    public ToDo readItem(String item) {
-        String query = "SELECT * FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + ")";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        ToDo listItem = new ToDo();
-
-        if (cursor.moveToFirst()) {
-            cursor.moveToFirst();
-            listItem.setID(Integer.parseInt(cursor.getString(0)));
-            listItem.setItem(cursor.getString(1));
-            cursor.close();
-        } else {
-            listItem = null;
-        }
-        db.close();
-        return listItem;
-    }
-
-    // CRUD method edit
-    public ToDo editItem(ToDo listItem) {
-        String query = "SELECT * FROM " + TODO_LIST + " WHERE " + COLUMN_ID + " = " + listItem.getID() + "\"" + ")";
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ITEM, listItem.getItem());
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.insert(TODO_LIST, null, values);
-        db.close();
-
-        return listItem;
-    }
-
-    // CRUD method delete
+    /*
+    CRUD method
+    Delete one item from the list.
+     */
     // TODO delete items by id not String item value
     public void deleteItem(String item) {
         String query = "DELETE FROM " + TODO_LIST + " WHERE " + COLUMN_ITEM + " =  \"" + item + "\"";
@@ -102,6 +65,7 @@ public class DBhelper extends SQLiteOpenHelper {
     }
 
     /*
+    CRUD method
     Loading complete database
      */
     public ArrayList<String>readList() {
@@ -110,6 +74,7 @@ public class DBhelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery( query, null );
         ArrayList<String> ToDoItems = new ArrayList<String>();
 
+        // adding a String listItem to the ArrayList of ToDoItems.
         String listItem = "";
         if (cursor.moveToFirst()) {
             while (cursor.isAfterLast() == false) {
@@ -123,6 +88,9 @@ public class DBhelper extends SQLiteOpenHelper {
         return ToDoItems;
         }
 
+        /*
+        Function to clean up whole database.
+         */
         public void DeleteAll(){
             SQLiteDatabase db = getWritableDatabase();
             String query = "DELETE FROM " + TODO_LIST;
