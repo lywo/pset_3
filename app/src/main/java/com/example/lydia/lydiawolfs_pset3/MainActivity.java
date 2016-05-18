@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     // Use of a Bundle to save the list’s data during rotation.
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        //you need to handle NullPionterException here.
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
